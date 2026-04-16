@@ -1,0 +1,235 @@
+.judion-login-layout {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  background-color: var(--bg-dark);
+  font-family: var(--font-ui);
+  overflow: hidden;
+}
+
+.judion-brand-panel {
+  flex: 1;
+  background-color: var(--judion-brown); /* Hex #523D2C */
+  color: var(--text-inverse);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  border-right: 2px solid var(--judion-gold);
+}
+
+.brand-content {
+  max-width: 480px;
+  margin: 0 auto;
+  animation: fade-right 0.8s ease-out forwards;
+}
+
+.judion-logo-wrapper {
+  margin-bottom: 24px;
+}
+
+.judion-name {
+  font-size: 56px;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.judion-tagline {
+  font-size: 20px;
+  color: var(--judion-gold);
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+
+.judion-divider {
+  height: 2px;
+  width: 60px;
+  background-color: var(--judion-gold);
+  margin-bottom: 32px;
+}
+
+.judion-usp {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #e5e5e5;
+  font-weight: 400;
+  font-style: italic;
+  max-width: 400px;
+}
+
+/* Auth Panel Right Side */
+.judion-auth-panel {
+  flex: 1;
+  background-color: var(--bg-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  animation: fade-left 0.8s ease-out forwards;
+}
+
+.auth-title {
+  font-size: 28px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  font-family: var(--font-header, inherit);
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.auth-error-alert {
+  background: var(--accent-red-bg);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--accent-red);
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.animate-shake {
+  animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.auth-form .form-group {
+  margin-bottom: 24px;
+}
+
+.auth-form .mb-8 {
+  margin-bottom: 40px;
+}
+
+.auth-form label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--judion-slate);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.auth-form input {
+  width: 100%;
+  background: var(--bg-app);
+  border: 2px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px 16px 14px 44px;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--judion-gold);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(207, 178, 134, 0.1);
+}
+
+.auth-form input:focus + .input-icon {
+  color: var(--judion-gold);
+}
+
+.auth-submit-btn {
+  width: 100%;
+  background: var(--judion-slate);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(71, 89, 103, 0.2);
+}
+
+.auth-submit-btn:hover {
+  background: var(--judion-brown);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(82, 61, 44, 0.3);
+}
+
+.btn-arrow {
+  transition: transform 0.3s ease;
+}
+
+.btn-arrow.sliding {
+  transform: translateX(4px);
+}
+
+.auth-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.auth-footer p {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Animations */
+@keyframes fade-right {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-left {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+@media (max-width: 900px) {
+  .judion-login-layout {
+    flex-direction: column;
+  }
+  .judion-brand-panel {
+    flex: 0 0 auto;
+    padding: 40px;
+    border-right: none;
+    border-bottom: 2px solid var(--judion-gold);
+  }
+}

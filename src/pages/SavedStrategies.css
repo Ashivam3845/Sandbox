@@ -1,0 +1,324 @@
+/* SavedStrategies.css */
+
+.strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.strategy-card-premium {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.strategy-card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(82, 61, 44, 0.15);
+  border-color: var(--judion-gold);
+}
+
+/* Gradient Top Bar */
+.strategy-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--judion-brown), var(--judion-gold));
+  z-index: 10;
+}
+
+.strategy-card-header {
+  padding: 24px 24px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.strategy-badge-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(207, 178, 134, 0.1);
+  color: var(--judion-brown);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(207, 178, 134, 0.3);
+}
+
+.strategy-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.strategy-action-btn {
+  background: var(--bg-app);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.strategy-action-btn:hover {
+  background: var(--judion-brown);
+  color: var(--judion-gold);
+  border-color: var(--judion-brown);
+}
+
+.strategy-action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--accent-red);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.strategy-card-body {
+  padding: 0 24px 20px;
+  flex: 1;
+}
+
+.strategy-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.st-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.st-tag-category {
+  background: var(--bg-dark);
+  color: #fff;
+}
+
+.st-tag-risk-Low {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.st-tag-risk-Medium {
+  background: rgba(234, 179, 8, 0.1);
+  color: #ca8a04;
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.st-tag-risk-High {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.strategy-title {
+  font-family: var(--font-header);
+  font-size: 18px;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.strategy-summary {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.strategy-card-footer {
+  padding: 16px 24px;
+  background: var(--bg-app);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.strategy-date {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-premium-action {
+  background: transparent;
+  border: none;
+  color: var(--judion-slate);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.btn-premium-action:hover {
+  background: rgba(71, 89, 103, 0.05);
+  color: var(--judion-brown);
+}
+
+/* Strategy Dossier Modal Overhaul */
+.strategy-dossier-modal {
+  width: 900px;
+  max-width: 95vw;
+  background: var(--bg-panel);
+  border-radius: 16px;
+  border: 1px solid var(--judion-gold);
+  box-shadow: 0 32px 64px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.strategy-dossier-header {
+  background: linear-gradient(135deg, var(--judion-brown), #3a2b1f);
+  padding: 32px;
+  position: relative;
+}
+
+.strategy-dossier-header::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: url('data:image/svg+xml;utf8,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="%23CFB286" opacity="0.1"/></svg>');
+  pointer-events: none;
+}
+
+.strategy-dossier-title {
+  font-family: var(--font-header);
+  font-size: 28px;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.strategy-dossier-subtitle {
+  color: var(--judion-gold);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-dossier-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.btn-dossier-close:hover {
+  background: var(--accent-red);
+  transform: rotate(90deg);
+}
+
+.strategy-dossier-body {
+  padding: 40px 32px;
+  max-height: 70vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Steps execution layout */
+.dossier-step-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dossier-step-row {
+  display: flex;
+  gap: 16px;
+  background: var(--bg-app);
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  border-radius: 12px;
+  align-items: flex-start;
+}
+
+.dossier-step-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--judion-brown);
+  color: var(--judion-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(82, 61, 44, 0.2);
+}
+
+.dossier-step-content {
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 4px;
+}
+
+.dossier-metric-panel {
+  flex: 1;
+  background: var(--bg-app);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-panel-glow {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: var(--judion-gold);
+  filter: blur(80px);
+  opacity: 0.15;
+  border-radius: 50%;
+  pointer-events: none;
+}

@@ -1,0 +1,79 @@
+.CaseCard {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.CaseCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: #b3d4ff;
+}
+
+.CaseCard.active {
+  border-color: var(--border-focus);
+  box-shadow: var(--shadow-md);
+  background-color: #f4f5f7; /* Slightly distinct bg for active state to stand out */
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-title {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.verdict-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.verdict-danger {
+  background-color: var(--alert-red-bg);
+  color: var(--alert-red-text);
+  border: 1px solid var(--alert-red-border);
+}
+
+.verdict-safe {
+  background-color: var(--safe-green-bg);
+  color: var(--safe-green-text);
+  border: 1px solid var(--safe-green-border);
+}
+
+.verdict-neutral {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+}

@@ -1,0 +1,46 @@
+.TrustScoreBadge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.progress-ring-container {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+.score-text {
+  position: absolute;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Colors based on trust percentage */
+.high-score {
+  stroke: #006644; /* safe green */
+}
+
+.med-score {
+  stroke: #ff991f; /* warning yellow */
+}
+
+.low-score {
+  stroke: #bf2600; /* alert red */
+}
