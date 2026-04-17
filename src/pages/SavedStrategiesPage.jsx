@@ -1,87 +1,13 @@
 import React, { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { Bookmark, Trash2, Copy, ArrowRight, ShieldCheck } from 'lucide-react';
 import './Pages.css';
 import './SavedStrategies.css';
 
-const strategies = [
-  { 
-    id: 1, 
-    title: 'Prior Art Invalidation via WiTricity Precedent', 
-    tags: ['Patent Defense', 'Invalidation'], 
-    summary: 'Leverage the WiTricity v. Momentum ruling to challenge patent eligibility under 35 U.S.C. § 101 for resonance-based charging claims.', 
-    saved: 'Apr 3, 2024', 
-    risk: 'Low',
-    details: {
-      synopsis: 'Construct an invalidation claim against the primary magnetic flux architecture leveraging prior wireless power transfer findings.',
-      steps: [
-        'Initialize IPR petition requesting Board review of Claim 7 based on obviousness over WiTricity variants.',
-        'Produce geometric magnetic modeling from 2011 standard documentation comparing field boundaries.',
-        'Discredit opposing expert testimony by validating mathematical variations as mere routine optimization.'
-      ],
-      precedents: ['WiTricity Corp. v. Momentum Dynamics (2020)', 'Alice Corp. v. CLS Bank (2014)'],
-      probability: '82%'
-    }
-  },
-  { 
-    id: 2, 
-    title: 'Force Majeure Defense — Regional Infrastructure', 
-    tags: ['Contract', 'Breach'], 
-    summary: 'Argue regulatory constraints on regional grid infrastructure as justifying force majeure protections under Clause 4.2 of the IP transfer agreement.', 
-    saved: 'Mar 18, 2024', 
-    risk: 'Medium',
-    details: {
-      synopsis: 'Utilize government infrastructure restriction logs to enact Force Majeure, overriding conventional delay liability terms.',
-      steps: [
-        'Secure Department of Energy regional load constraint logs validating physical impossibility of testing execution.',
-        'Map Clause 4.2 definitions directly to these DOE regulatory emergency mandates.',
-        'File motion to dismiss specific performance counterclaims relying on precedent excuse doctrine.'
-      ],
-      precedents: ['Facto v. Pantagis (NJ, 2007) describing objective impossibility.'],
-      probability: '65%'
-    }
-  },
-  { 
-    id: 3, 
-    title: 'Claim Construction Narrowing — Claim 7', 
-    tags: ['Patent Defense', 'Claim Chart'], 
-    summary: 'Distinguish shielding coil configuration via modified magnetic flux paths to argue structural uniqueness outside plaintiff\'s claim scope.', 
-    saved: 'Jan 30, 2024', 
-    risk: 'Low',
-    details: {
-      synopsis: 'Aggressively litigate Markman hearing definitions to constrict "shielding coil" semantic definitions.',
-      steps: [
-        'Submit intrinsic evidence focusing strictly on the plaintiff’s own specification diagrams limiting coil radii.',
-        'Counter plaintiff\'s broad interpretation using extrinsic IEEE standard dictionaries defining shielding geometries.',
-        'Force non-infringement summary judgment if construction is narrowed.'
-      ],
-      precedents: ['Phillips v. AWH Corp (2005) controlling extrinsic/intrinsic weighting.'],
-      probability: '88%'
-    }
-  },
-  { 
-    id: 4, 
-    title: 'Jurisdictional Challenge — Delaware Digital Signature', 
-    tags: ['Jurisdiction', 'Contract'], 
-    summary: 'Challenge validity of digital signature enforcement under Delaware Corp Law § 103 for multi-state non-compete agreements.', 
-    saved: 'Nov 10, 2023', 
-    risk: 'High',
-    details: {
-      synopsis: 'Invalidate restrictive covenants based on multi-state statutory conflicts overriding Delaware selection clauses.',
-      steps: [
-        'Analyze California BPC § 16600 statutory conflict with Delaware contract selections.',
-        'Prove employee nexus resides explicitly outside Delaware to invalidate the digital signature formation venue.',
-        'Filing injunction against out-of-state enforcement mechanisms tracking non-competes.'
-      ],
-      precedents: ['Ascension v. Barnes (DE, 2022) analyzing signature venuses.'],
-      probability: '41%'
-    }
-  }
-];
-
 const riskColors = { Low: 'tag-active', Medium: 'tag-closed', High: 'tag-risk' };
 
 export default function SavedStrategiesPage() {
-  const [items, setItems] = useState(strategies);
+  const { strategies, setStrategies } = useOutletContext();
   const [selectedStrategy, setSelectedStrategy] = useState(null);
 
   return (
@@ -92,7 +18,7 @@ export default function SavedStrategiesPage() {
       </div>
 
       <div className="strategy-grid">
-        {items.map(s => (
+        {strategies.map(s => (
           <div key={s.id} className="strategy-card-premium">
             <div className="strategy-card-header">
               <div className="strategy-badge-icon">
@@ -102,7 +28,7 @@ export default function SavedStrategiesPage() {
                 <button className="strategy-action-btn" onClick={() => navigator.clipboard?.writeText(s.title)} title="Copy Strategy Title">
                   <Copy size={14} />
                 </button>
-                <button className="strategy-action-btn delete" onClick={() => setItems(prev => prev.filter(x => x.id !== s.id))} title="Delete Strategy">
+                <button className="strategy-action-btn delete" onClick={() => setStrategies(prev => prev.filter(x => x.id !== s.id))} title="Delete Strategy">
                   <Trash2 size={14} />
                 </button>
               </div>

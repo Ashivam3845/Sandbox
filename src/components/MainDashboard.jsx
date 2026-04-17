@@ -190,44 +190,71 @@ export default function MainDashboard({ currentAnalysis, setCurrentAnalysis }) {
           </div>
         </div>
 
-        {/* Strategy Simulator */}
-        <div className="strategy-simulator-expanded card-border mt-6">
-          <div className="card-header-flex">
-            <div>
-              <h3 className="card-title mb-1 text-base">Case Strategy Simulator</h3>
-              <p className="text-sm text-muted">Test arguments against 2.3M+ precedents</p>
+        {/* Strategy Simulator or Active Strategy Readout */}
+        {currentAnalysis.activeStrategy ? (
+          <div className="strategy-simulator-expanded card-border mt-6" style={{ background: 'linear-gradient(to right, var(--bg-panel), var(--bg-app))' }}>
+            <div className="card-header-flex">
+              <div>
+                <h3 className="card-title mb-1 text-base">Linked Tactical Strategy</h3>
+                <p className="text-sm text-muted">Automatically mapped via Judion Intelligence Matrix.</p>
+              </div>
+              <span className="badge-dark" style={{ background: 'var(--judion-gold)', color: 'var(--judion-brown)' }}>ACTIVE SIMULATION</span>
             </div>
-            <span className="badge-dark">LIVE SIMULATION</span>
-          </div>
 
-          <div className="quick-simulations mt-4">
-            <h4 className="text-xs mb-3">QUICK SIMULATIONS</h4>
-            <div className="pills-row">
-              <button className="sim-pill">Argue force majeure defense based on the July 2024...</button>
-              <button className="sim-pill">Emphasize the material changes to specifications a...</button>
-              <button className="sim-pill">Calculate damages using expectation vs. reliance i...</button>
+            <div className="simulation-engine mt-4 p-5 rounded" style={{ background: 'var(--bg-app)', border: '1px solid var(--judion-gold)' }}>
+              <div className="engine-header flex items-center gap-2 mb-3">
+                <Flame size={18} style={{ color: 'var(--judion-gold)' }}/> <span className="text-xs font-bold" style={{ color: 'var(--judion-brown)' }}>STRATEGY: {currentAnalysis.activeStrategy.title}</span>
+              </div>
+              <div className="engine-body text-sm line-height-tall" style={{ color: 'var(--text-main)' }}>
+                <p><strong>Synopsis:</strong> {currentAnalysis.activeStrategy.details.synopsis}</p>
+                <div className="mt-4">
+                  <strong>Execution Steps:</strong>
+                  <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                     {currentAnalysis.activeStrategy.details.steps.map((step, i) => <li key={i}>{step}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
+        ) : (
+          <div className="strategy-simulator-expanded card-border mt-6">
+            <div className="card-header-flex">
+              <div>
+                <h3 className="card-title mb-1 text-base">Case Strategy Simulator</h3>
+                <p className="text-sm text-muted">Test arguments against 2.3M+ precedents</p>
+              </div>
+              <span className="badge-dark">LIVE SIMULATION</span>
+            </div>
 
-          <div className="simulation-engine mt-4 p-4 rounded bg-gray-50 border border-gray-100">
-            <div className="engine-header flex items-center gap-2 mb-2">
-              <Flame size={18} className="text-safe"/> <span className="text-xs font-semibold">SIMULATION ENGINE</span>
+            <div className="quick-simulations mt-4">
+              <h4 className="text-xs mb-3">QUICK SIMULATIONS</h4>
+              <div className="pills-row">
+                <button className="sim-pill">Argue force majeure defense based on the July 2024...</button>
+                <button className="sim-pill">Emphasize the material changes to specifications a...</button>
+                <button className="sim-pill">Calculate damages using expectation vs. reliance i...</button>
+              </div>
             </div>
-            <div className="engine-body text-sm text-gray-800">
-              <p>Welcome to the Case Strategy Simulator. Test different legal arguments and strategies to forecast potential outcomes. I'll analyze each argument against our proprietary database of 2.3M+ case precedents and provide probabilistic outcomes.</p>
-              <br/>
-              <p>Current Case: TechVenture LLC v. InnovateSoft Corp</p>
-              <p>Jurisdiction: Delaware Court of Chancery</p>
-              <p>Claim Type: Breach of Contract</p>
-            </div>
-            <p className="chat-time mt-3 text-xs text-muted">10:36 AM</p>
-          </div>
 
-          <div className="simulator-input-area mt-4">
-            <input type="text" className="w-full" placeholder="e.g., Argue substantial performance doctrine under UCC § 2-508..." />
-            <button className="btn-dark"><Cpu size={16} /> Simulate</button>
+            <div className="simulation-engine mt-4 p-4 rounded bg-gray-50 border border-gray-100">
+              <div className="engine-header flex items-center gap-2 mb-2">
+                <Flame size={18} className="text-safe"/> <span className="text-xs font-semibold">SIMULATION ENGINE</span>
+              </div>
+              <div className="engine-body text-sm text-gray-800">
+                <p>Welcome to the Case Strategy Simulator. Test different legal arguments and strategies to forecast potential outcomes. I'll analyze each argument against our proprietary database of 2.3M+ case precedents and provide probabilistic outcomes.</p>
+                <br/>
+                <p>Current Case: {currentAnalysis.banner.title}</p>
+                <p>Jurisdiction: {currentAnalysis.banner.location}</p>
+                <p>Claim Type: {currentAnalysis.banner.type}</p>
+              </div>
+              <p className="chat-time mt-3 text-xs text-muted">System Active</p>
+            </div>
+
+            <div className="simulator-input-area mt-4">
+              <input type="text" className="w-full" placeholder="e.g., Argue substantial performance doctrine under UCC § 2-508..." />
+              <button className="btn-dark"><Cpu size={16} /> Simulate</button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="disclaimer mt-8 mb-100 no-print">
           AI suggestions are assistive. Final decisions remain with the user. Sovereign Counsel does not provide formal legal advice.

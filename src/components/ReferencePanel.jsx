@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { Eye, ChevronUp, X, Scale, User, FileText, Landmark } from 'lucide-react';
+import { Eye, ChevronUp, ChevronDown, X, Scale, User, FileText, Landmark } from 'lucide-react';
 import './ReferencePanel.css';
 
 export default function ReferencePanel({ currentAnalysis }) {
   const [selectedCase, setSelectedCase] = useState(null);
+
+  const [collapseMatched, setCollapseMatched] = useState(false);
+  const [collapseLegal, setCollapseLegal] = useState(false);
+  const [collapseVector, setCollapseVector] = useState(false);
 
   if (!currentAnalysis) return null;
   return (
@@ -14,12 +18,12 @@ export default function ReferencePanel({ currentAnalysis }) {
       </div>
 
       <div className="ref-section">
-        <div className="section-header-flex">
+        <div className="section-header-flex" style={{ cursor: 'pointer' }} onClick={() => setCollapseMatched(!collapseMatched)}>
           <h4 className="text-xs ref-section-title">MATCHED CASE REFERENCES</h4>
-          <ChevronUp size={16} className="text-muted" />
+          {collapseMatched ? <ChevronDown size={16} className="text-muted" /> : <ChevronUp size={16} className="text-muted" />}
         </div>
         
-        {currentAnalysis.references.map((ref, idx) => (
+        {!collapseMatched && currentAnalysis.references.map((ref, idx) => (
           <div key={idx} className="ref-card card-border">
             <div className="ref-card-header">
               <h5 className="ref-card-title">{ref.title}</h5>
@@ -47,12 +51,12 @@ export default function ReferencePanel({ currentAnalysis }) {
       </div>
 
       <div className="ref-section">
-        <div className="section-header-flex">
+        <div className="section-header-flex" style={{ cursor: 'pointer' }} onClick={() => setCollapseLegal(!collapseLegal)}>
           <h4 className="text-xs ref-section-title">LEGAL SECTIONS MATCH</h4>
-          <ChevronUp size={16} className="text-muted" />
+          {collapseLegal ? <ChevronDown size={16} className="text-muted" /> : <ChevronUp size={16} className="text-muted" />}
         </div>
         
-        {currentAnalysis.legal.map((sec, idx) => (
+        {!collapseLegal && currentAnalysis.legal.map((sec, idx) => (
           <div key={idx} className="legal-card bg-blue-50 border-blue-100">
             <h5 className="legal-title text-blue-900">{sec.title}</h5>
             <p className="legal-desc text-blue-800">{sec.desc}</p>
@@ -61,11 +65,14 @@ export default function ReferencePanel({ currentAnalysis }) {
       </div>
 
       <div className="ref-section">
-        <div className="section-header-flex">
+        <div className="section-header-flex" style={{ cursor: 'pointer' }} onClick={() => setCollapseVector(!collapseVector)}>
             <h4 className="text-xs ref-section-title">VECTOR SEMANTIC GRAPH</h4>
-            <ChevronUp size={16} className="text-muted" />
+            {collapseVector ? <ChevronDown size={16} className="text-muted" /> : <ChevronUp size={16} className="text-muted" />}
         </div>
-        <div className="vector-graph-container">
+        
+        {!collapseVector && (
+          <>
+            <div className="vector-graph-container">
           <img src="/semantic_graph_mockup.png" alt="Vector Semantic Graph" className="vector-img" />
           <div className="vector-pill">Vector Semantic Graph Active</div>
         </div>
@@ -85,6 +92,8 @@ export default function ReferencePanel({ currentAnalysis }) {
             <span className="font-bold">{currentAnalysis.depth.jurisdictions}</span>
           </div>
         </div>
+          </>
+        )}
       </div>
 
       {selectedCase && (

@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Scale, ChevronDown, ChevronUp } from 'lucide-react';
 import './Pages.css';
 
-const mockCases = [
-  { id: 1, title: 'Apple Inc. v. Samsung Electronics Co.', court: 'N.D. California', date: 'Dec 14, 2012', verdict: 'Infringement Found', status: 'active', confidence: 85 },
-  { id: 2, title: 'WiTricity Corp. v. Momentum Dynamics', court: 'D. Delaware', date: 'Apr 03, 2019', verdict: 'Patent Invalidated', status: 'closed', confidence: 72 },
-  { id: 3, title: 'Energous Corp. v. Powercast Corp.', court: 'W.D. Texas', date: 'Aug 21, 2021', verdict: 'No Infringement', status: 'closed', confidence: 64 },
-  { id: 4, title: 'TechCorp v. InnovateCo — Wireless Patent', court: 'D. Delaware', date: 'Jan 08, 2024', verdict: 'Pending', status: 'active', confidence: 90 },
-  { id: 5, title: 'Spectrum Labs v. DynaTech International', court: 'Federal Circuit', date: 'Mar 15, 2023', verdict: 'Appeal Filed', status: 'active', confidence: 77 },
-];
-
 export default function CaseHistoryPage() {
   const navigate = useNavigate();
+  const { cases, setCases, setActiveAnalysis } = useOutletContext();
   const [filter, setFilter] = useState('all');
   const [sortAsc, setSortAsc] = useState(false);
 
-  const filtered = mockCases
+  const handleToggleStatus = (e, caseId, currentStatus) => {
+    e.stopPropagation();
+    setCases(prev => prev.map(c => 
+      c.id === caseId 
+        ? { ...c, status: currentStatus === 'active' ? 'closed' : 'active' }
+        : c
+    ));
+  };
+
+  const handleDeleteCase = (e, caseId) => {
+    e.stopPropagation();
+    setCases(prev => prev.filter(c => c.id !== caseId));
+  };
+
+  const filtered = cases
     .filter(c => filter === 'all' || c.status === filter)
     .sort((a, b) => sortAsc ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
 
@@ -52,18 +59,41 @@ export default function CaseHistoryPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {filtered.map(c => (
-          <div key={c.id} className="page-card" style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => navigate('/')}>
+          <div key={c.id} className="page-card" style={{ display: 'flex', alignItems: 'center', gap: 20, cursor: 'pointer' }} onClick={() => {
+            if (c.datasetContext) {
+              setActiveAnalysis(c.datasetContext);
+            }
+            navigate('/');
+          }}>
             <Scale size={20} style={{ flexShrink: 0, color: 'var(--text-muted)' }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{c.title}</div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.court} · {c.date}</div>
             </div>
-            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <div style={{ textAlign: 'right', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
               <span className={`card-tag ${c.status === 'active' ? 'tag-active' : 'tag-closed'}`}>{c.status}</span>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>Confidence: {c.confidence}%</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Confidence: {c.confidence}%</div>
             </div>
-            <div style={{ padding: '4px 10px', border: '1px solid var(--border-light)', borderRadius: 4, fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
+            <div style={{ padding: '4px 10px', border: '1px solid var(--border-light)', borderRadius: 4, fontSize: 12, fontWeight: 600, flexShrink: 0, background: 'var(--bg-dark)', color: 'var(--text-inverse)' }}>
               {c.verdict}
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexShrink: 0, marginLeft: 16 }}>
+              <button 
+                onClick={(e) => handleToggleStatus(e, c.id, c.status)}
+                style={{ padding: '6px 12px', fontSize: 13, background: 'var(--bg-panel)', border: '1px solid var(--border-light)', borderRadius: 6, color: 'var(--text-main)', cursor: 'pointer', transition: 'all 0.2s', fontWeight: 500 }}
+                onMouseOver={(e) => { e.target.style.background = 'var(--bg-dark)'; e.target.style.color = 'var(--text-inverse)'; }}
+                onMouseOut={(e) => { e.target.style.background = 'var(--bg-panel)'; e.target.style.color = 'var(--text-main)'; }}
+              >
+                {c.status === 'active' ? 'Close Case' : 'Reopen'}
+              </button>
+              <button 
+                onClick={(e) => handleDeleteCase(e, c.id)}
+                style={{ padding: '6px 12px', fontSize: 13, background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: 6, color: '#ef4444', cursor: 'pointer', transition: 'all 0.2s', fontWeight: 500 }}
+                onMouseOver={(e) => { e.target.style.background = 'rgba(239, 68, 68, 0.15)'; e.target.style.borderColor = '#ef4444'; }}
+                onMouseOut={(e) => { e.target.style.background = 'rgba(239, 68, 68, 0.05)'; e.target.style.borderColor = 'rgba(239, 68, 68, 0.4)'; }}
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}

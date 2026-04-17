@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import MainDashboard from '../components/MainDashboard';
 import ReferencePanel from '../components/ReferencePanel';
-import { breachDataset } from '../data/mockAnalysisData';
 
 export default function DashboardPage() {
-  const [currentAnalysis, setCurrentAnalysis] = useState(breachDataset);
+  const { activeAnalysis } = useOutletContext();
+  const [currentAnalysis, setCurrentAnalysis] = useState(activeAnalysis);
+
+  useEffect(() => {
+    // If global activeAnalysis updates, sync the local state representation.
+    setCurrentAnalysis(activeAnalysis); 
+  }, [activeAnalysis]);
 
   return (
     <div className="DashboardGrid">
