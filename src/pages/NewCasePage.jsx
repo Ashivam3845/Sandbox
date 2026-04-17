@@ -1,214 +1,168 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UploadCloud, FileText, ArrowRight, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, Bot, FileText, BarChart2, ShieldCheck, Zap } from 'lucide-react';
 import './Pages.css';
+import './ChatIntake.css';
+
+const MOCK_ASSESSMENT_RESPONSE = {
+  jurisdiction: "Pending Match",
+  domain: "Pending Scope",
+  probability: "73%",
+  recommendedAction: "Immediate Claim Construction Invalidity Matrix",
+  summary: "Initial analysis indicates significant overlapping elements with previously executed matters. Prior art references could serve as strong invalidation parameters if structured via a Markman defense early in discovery."
+};
 
 export default function NewCasePage() {
-  const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [caseData, setCaseData] = useState({
-    title: '',
-    jurisdiction: 'Select Court...',
-    domain: 'Select Domain...',
-    role: 'Defendant',
-    filingDate: '',
-    summary: ''
-  });
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [messages, setMessages] = useState([
+    { role: 'ai', type: 'text', content: "Welcome to Judion Co-Pilot Initial Assessment. I am prepared to begin constructing your legal thesis. To initialize the matrices, please provide a working Case Title for this matter." }
+  ]);
+  const [inputValue, setInputValue] = useState("");
+  const [phase, setPhase] = useState("awaiting_title");
+  const [isTyping, setIsTyping] = useState(false);
+  
+  const endOfChatRef = useRef(null);
 
-  const handleSubmit = () => {
-    // In a real application, submit caseData and uploadedFiles here!
-    navigate('/');
+  useEffect(() => {
+    if (endOfChatRef.current) {
+      endOfChatRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isTyping]);
+
+  const handleSend = () => {
+    if (!inputValue.trim() || isTyping) return;
+
+    // Push User message
+    const userMsg = { role: 'user', type: 'text', content: inputValue.trim() };
+    setMessages(prev => [...prev, userMsg]);
+    setInputValue("");
+    setIsTyping(true);
+
+    // Simulated AI response lag
+    setTimeout(() => {
+      setIsTyping(false);
+      progressConversation();
+    }, 1500);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCaseData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileUpload = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files);
-      setUploadedFiles(prev => [...prev, ...newFiles]);
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSend();
     }
   };
 
-  const removeFile = (indexToRemove) => {
-    setUploadedFiles(prev => prev.filter((_, index) => index !== indexToRemove));
+  const progressConversation = () => {
+    if (phase === "awaiting_title") {
+      setMessages(prev => [...prev, { role: 'ai', type: 'text', content: "Title sequence locked. What primary jurisdictional domain does this dispute primarily fall under? (e.g., Patent Infringement, M&A Antitrust, Employment Law)" }]);
+      setPhase("awaiting_domain");
+    } 
+    else if (phase === "awaiting_domain") {
+      setMessages(prev => [...prev, { role: 'ai', type: 'text', content: "Domain parameters confirmed. Finally, please provide a brief summary of the exact legal complaint, known facts, or critical prior constraints." }]);
+      setPhase("awaiting_summary");
+    }
+    else if (phase === "awaiting_summary") {
+      setMessages(prev => [...prev, { role: 'ai', type: 'text', content: "Processing context structure against Sovereign datasets. Please wait..." }]);
+      setPhase("computing");
+      
+      // Simulate heavy AI processing lag generating the final Payload
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        setMessages(prev => [...prev, { role: 'ai', type: 'assessment', content: "Assessment generation absolute." }]);
+        setPhase("complete");
+      }, 3000);
+    }
   };
 
   return (
-    <div className="page-wrapper">
-      <div className="page-header">
-        <h1>New Case</h1>
-        <p>Intake a new matter and let Sovereign Counsel build your initial analysis.</p>
+    <div className="page-wrapper animate-fade-in flex flex-col h-full">
+      <div className="page-header" style={{ marginBottom: 16 }}>
+        <h1>Construct New Legal Matrix</h1>
+        <p>Your interactive Judion Co-Pilot will autonomously assess variable risk metrics directly through this terminal.</p>
       </div>
 
-      <div style={{ maxWidth: 720 }}>
-        {/* Step Indicator */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 32 }}>
-          {['Case Details', 'Documents', 'Review'].map((s, i) => (
-            <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div style={{
-                width: 28, height: 28, borderRadius: '50%',
-                background: step > i ? 'var(--bg-dark)' : step === i + 1 ? 'var(--bg-dark)' : 'var(--border-light)',
-                color: step >= i + 1 ? '#fff' : 'var(--text-muted)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, fontWeight: 700
-              }}>{i + 1}</div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: step === i + 1 ? 'var(--text-main)' : 'var(--text-muted)' }}>{s}</span>
-              {i < 2 && <ArrowRight size={14} style={{ color: 'var(--text-muted)' }} />}
-            </div>
-          ))}
+      <div className="chat-intake-wrapper">
+        <div className="chat-intake-header">
+          <div className="chat-intake-header-icon">
+            <Zap size={22} />
+          </div>
+          <div className="chat-intake-header-text">
+            <h2>Judion Interrogative Protocol</h2>
+            <p>Active Live Tracking 🟢 Secure Module</p>
+          </div>
         </div>
 
-        {step === 1 && (
-          <div className="settings-section">
-            <div className="settings-section-title">Case Information</div>
-            <div style={{ padding: '24px' }}>
-              <div className="form-group">
-                <label>Case Title *</label>
-                <input 
-                  name="title"
-                  value={caseData.title}
-                  onChange={handleInputChange}
-                  placeholder="e.g., TechCorp v. InnovateCo — Patent Dispute 2024" 
-                />
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Jurisdiction</label>
-                  <select name="jurisdiction" value={caseData.jurisdiction} onChange={handleInputChange}>
-                    <option>Select Court...</option>
-                    <option>N.D. California</option>
-                    <option>D. Delaware</option>
-                    <option>W.D. Texas</option>
-                    <option>Federal Circuit</option>
-                    <option>S.D. New York</option>
-                  </select>
+        <div className="chat-window">
+          {messages.map((msg, i) => (
+            <div key={i} className={`chat-bubble-wrapper ${msg.role} animate-fade-in`}>
+              {msg.type === 'text' ? (
+                <div className={`chat-bubble ${msg.role}`}>
+                  {msg.role === 'ai' && <Bot size={14} style={{ color: 'var(--judion-gold)', marginBottom: 8 }} />}
+                  {msg.content}
                 </div>
-                <div className="form-group">
-                  <label>Technology Domain</label>
-                  <select name="domain" value={caseData.domain} onChange={handleInputChange}>
-                    <option>Select Domain...</option>
-                    <option>Wireless Charging</option>
-                    <option>Semiconductor</option>
-                    <option>Software / AI</option>
-                    <option>Biotech</option>
-                    <option>Telecommunications</option>
-                  </select>
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Client Role</label>
-                  <select name="role" value={caseData.role} onChange={handleInputChange}>
-                    <option>Defendant</option>
-                    <option>Plaintiff</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Filing Date</label>
-                  <input 
-                    type="date" 
-                    name="filingDate"
-                    value={caseData.filingDate}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Case Summary</label>
-                <textarea 
-                  name="summary"
-                  value={caseData.summary}
-                  onChange={handleInputChange}
-                  placeholder="Briefly describe the core dispute, key claims, and any known prior art..." 
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div className="settings-section">
-            <div className="settings-section-title">Upload Case Documents</div>
-            <div style={{ padding: '24px' }}>
-              <label className="upload-zone" style={{ display: 'block' }}>
-                <input type="file" multiple style={{ display: 'none' }} onChange={handleFileUpload} />
-                <UploadCloud size={40} style={{ margin: '0 auto 16px', display: 'block', color: 'var(--text-muted)' }} />
-                <h4>Drag & drop files here or click to browse</h4>
-                <p>Supports PDF, DOCX, TXT — up to 50 MB per file</p>
-              </label>
-
-              {uploadedFiles.length > 0 && (
-                <div style={{ marginTop: 24 }}>
-                  <h4 style={{ fontSize: 13, marginBottom: 12 }}>Uploaded Files</h4>
-                  {uploadedFiles.map((file, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border-light)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <FileText size={16} style={{ color: 'var(--accent-green)' }} />
-                        <span style={{ fontSize: 13, color: 'var(--text-main)' }}>{file.name}</span>
-                      </div>
-                      <X size={16} style={{ color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => removeFile(idx)} />
-                    </div>
-                  ))}
+              ) : (
+                <div className="chat-bubble ai" style={{ maxWidth: '85%', width: '100%' }}>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                     <ShieldCheck size={16} style={{ color: 'var(--judion-gold)' }} />
+                     <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)' }}>MAPPING COMPLETE</span>
+                   </div>
+                   
+                   <div className="chat-assessment-panel">
+                     <div className="assessment-header">
+                       <BarChart2 size={24} style={{ color: 'var(--judion-slate)' }} />
+                       <h3 className="assessment-title">Global Analysis Payload</h3>
+                       <span className="assessment-tag">PRELIMINARY VECTOR</span>
+                     </div>
+                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                        <div>
+                           <label style={{ fontSize: 10, fontWeight: 800, color: 'var(--text-muted)', letterSpacing: 1 }}>PROJECTED OUTCOME PROBABILITY</label>
+                           <div style={{ fontSize: 32, fontFamily: 'var(--font-header)', fontWeight: 700, color: 'var(--judion-brown)' }}>{MOCK_ASSESSMENT_RESPONSE.probability}</div>
+                        </div>
+                        <div>
+                           <label style={{ fontSize: 10, fontWeight: 800, color: 'var(--text-muted)', letterSpacing: 1 }}>RECOMMENDED STRIKE</label>
+                           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)', marginTop: 4 }}>{MOCK_ASSESSMENT_RESPONSE.recommendedAction}</div>
+                        </div>
+                     </div>
+                     <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, borderTop: '1px solid var(--border-light)', paddingTop: 16 }}>
+                       {MOCK_ASSESSMENT_RESPONSE.summary}
+                     </p>
+                     
+                     <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
+                        <button className="btn-sm-dark w-full" style={{ padding: '12px', fontSize: 14 }}>Transmute into Working Case</button>
+                     </div>
+                   </div>
                 </div>
               )}
-
-              <div style={{ marginTop: 24 }}>
-                <h4 style={{ fontSize: 13, marginBottom: 12 }}>Suggested Document Types</h4>
-                {['Patent Application / Brief', 'Prior Art References', 'Claim Charts', 'Expert Testimony'].map(doc => (
-                  <div key={doc} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border-light)' }}>
-                    <FileText size={16} style={{ color: 'var(--text-muted)' }} />
-                    <span style={{ fontSize: 13 }}>{doc}</span>
-                  </div>
-                ))}
+            </div>
+          ))}
+          
+          {isTyping && (
+            <div className="chat-bubble-wrapper ai animate-fade-in">
+              <div className="chat-bubble ai chat-typing-indicator">
+                <div className="chat-typing-dot"></div>
+                <div className="chat-typing-dot"></div>
+                <div className="chat-typing-dot"></div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+          <div ref={endOfChatRef} />
+        </div>
 
-        {step === 3 && (
-          <div className="settings-section">
-            <div className="settings-section-title">Review & Submit</div>
-            <div style={{ padding: '24px' }}>
-              <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 24 }}>
-                Sovereign Counsel will analyze all inputs and generate an initial case strategy report. This may take 30–90 seconds depending on document size.
-              </p>
-              {[
-                { label: 'Case Title', value: caseData.title || 'None specified' },
-                { label: 'Jurisdiction', value: caseData.jurisdiction !== 'Select Court...' ? caseData.jurisdiction : 'None specified' },
-                { label: 'Domain', value: caseData.domain !== 'Select Domain...' ? caseData.domain : 'None specified' },
-                { label: 'Role', value: caseData.role },
-                { label: 'Filing Date', value: caseData.filingDate || 'None specified' },
-                { label: 'Documents Uploaded', value: `${uploadedFiles.length} file(s)` },
-              ].map(({ label, value }) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border-light)' }}>
-                  <span style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
-                  <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="form-submit-row">
-          {step > 1 && (
-            <button className="btn-sm-outline" onClick={() => setStep(s => s - 1)} style={{ padding: '10px 24px' }}>
-              Back
-            </button>
-          )}
-          {step < 3 && (
-            <button className="btn-sm-dark" onClick={() => setStep(s => s + 1)} style={{ padding: '10px 24px' }}>
-              Continue
-            </button>
-          )}
-          {step === 3 && (
-            <button className="btn-sm-dark" style={{ padding: '10px 24px', background: 'var(--accent-green)' }} onClick={handleSubmit}>
-              Submit for Analysis
-            </button>
-          )}
+        <div className="chat-input-area">
+          <input 
+            type="text" 
+            className="chat-input-field" 
+            placeholder={phase === "complete" || phase === "computing" ? "Terminal Locked..." : "Input parameters to Judion Co-Pilot..."}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={phase === "complete" || phase === "computing"}
+          />
+          <button 
+            className="chat-send-btn" 
+            onClick={handleSend}
+            disabled={!inputValue.trim() || phase === "complete" || phase === "computing"}
+          >
+            <Send size={18} />
+          </button>
         </div>
       </div>
     </div>
