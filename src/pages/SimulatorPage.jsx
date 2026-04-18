@@ -1,8 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { Send, Scale, UserCircle, Gavel, FileText, ChevronRight, CheckCircle, AlertTriangle, BookOpen, Flame, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Send, Scale, UserCircle, Gavel, ChevronRight, CheckCircle, AlertTriangle, BookOpen, Flame, ShieldCheck, ArrowRight, Layers, FileText } from 'lucide-react';
+import { breachDataset, patentDataset } from '../data/mockAnalysisData.jsx';
 import './SimulatorPage.css';
 import './Pages.css';
+
+const DEMO_CASES = [
+  { id: 'breach', label: 'Breach of Contract', sub: 'TechVenture LLC v. InnovateSoft Corp', tag: 'Demo', dataset: breachDataset },
+  { id: 'patent', label: 'Patent Infringement', sub: 'PulseCharging v. OmniTech', tag: 'Demo', dataset: patentDataset },
+];
 
 // ─────────────────────────────────────────────────────
 // Strategy Preview panel (linked from NewCase)
@@ -67,7 +73,9 @@ function StrategyPreviewCard({ strategy, onLaunchTrial }) {
 export default function SimulatorPage() {
   const { activeAnalysis } = useOutletContext();
   const navigate = useNavigate();
-  const [phase, setPhase] = useState('setup'); // 'setup', 'strategy_review', 'trial', 'verdict'
+  // 'case_select' → 'setup' → 'trial' → 'verdict'
+  const [phase, setPhase] = useState('case_select');
+  const [trialCase, setTrialCase] = useState(null); // the case being simulated
   const [side, setSide] = useState(null);
 
   const [messages, setMessages] = useState([]);
@@ -79,14 +87,14 @@ export default function SimulatorPage() {
     endOfChatRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  const hasLinkedStrategy = activeAnalysis?.activeStrategy != null;
+  const hasLinkedStrategy = trialCase?.activeStrategy != null;
 
   const handleStartTrial = (selectedSide) => {
     setSide(selectedSide);
     setPhase('trial');
     const roleMap = selectedSide === 'plaintiff' ? 'Counsel for the Plaintiff' : 'Counsel for the Defense';
     setMessages([
-      { role: 'judge', text: `The Court is now in session regarding the matter of "${activeAnalysis.banner.title}". ${roleMap}, you may present your opening statement.` }
+      { role: 'judge', text: `The Court is now in session regarding the matter of "${trialCase.banner.title}". ${roleMap}, you may present your opening statement.` }
     ]);
   };
 
@@ -120,7 +128,62 @@ export default function SimulatorPage() {
   };
 
   const handleEndTrial = () => setPhase('verdict');
-  const handleRestart = () => { setPhase('setup'); setSide(null); setMessages([]); };
+  const handleRestart = () => { setPhase('case_select'); setSide(null); setMessages([]); setTrialCase(null); };
+
+  // ── Case Selection Screen ──────────────────────────
+  if (phase === 'case_select') {
+    return (
+      <div className="page-wrapper animate-fade-in Simulator-Setup">
+        <div className="page-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+            <Layers size={20} style={{ color: 'var(--judion-gold)' }} />
+            <h1 style={{ fontFamily: 'var(--font-header)', fontSize: 24, letterSpacing: '0.4px' }}>Select Case for Trial</h1>
+          </div>
+          <p>Run the Court Simulator on your active case, or choose a demo case to practice with.</p>
+        </div>
+
+        <div className="case-select-grid">
+          {/* Active Case */}
+          {activeAnalysis && (
+            <div
+              className="case-select-card active-case-card"
+              onClick={() => { setTrialCase(activeAnalysis); setPhase('setup'); }}
+            >
+              <div className="case-select-tag">Your Active Case</div>
+              <div className="case-select-icon"><Scale size={28} /></div>
+              <h3 className="case-select-title">{activeAnalysis.banner.title}</h3>
+              <p className="case-select-sub">{activeAnalysis.banner.type} · {activeAnalysis.banner.location}</p>
+              {activeAnalysis.activeStrategy && (
+                <div className="case-select-strategy-badge">
+                  <Flame size={12} /> Strategy Linked
+                </div>
+              )}
+              <button className="btn-glass w-full mt-4" style={{ justifyContent: 'center' }}>
+                Run Trial <ChevronRight size={14} />
+              </button>
+            </div>
+          )}
+
+          {/* Demo Cases */}
+          {DEMO_CASES.map(dc => (
+            <div
+              key={dc.id}
+              className="case-select-card demo-case-card"
+              onClick={() => { setTrialCase(dc.dataset); setPhase('setup'); }}
+            >
+              <div className="case-select-tag demo">Demo Case</div>
+              <div className="case-select-icon"><FileText size={28} /></div>
+              <h3 className="case-select-title">{dc.sub}</h3>
+              <p className="case-select-sub">{dc.label} · Practice Mode</p>
+              <button className="btn-glass w-full mt-4" style={{ justifyContent: 'center', opacity: 0.8 }}>
+                Practice Trial <ChevronRight size={14} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   // ── Setup Screen ───────────────────────────────────
   if (phase === 'setup') {
@@ -131,7 +194,13 @@ export default function SimulatorPage() {
             <Scale size={20} style={{ color: 'var(--judion-gold)' }} />
             <h1 style={{ fontFamily: 'var(--font-header)', fontSize: 24, letterSpacing: '0.4px' }}>Virtual Court Simulator</h1>
           </div>
-          <p>Test your arguments against the Sovereign AI in a live adversarial environment regarding: <strong>{activeAnalysis?.banner?.title || 'No Case Loaded'}</strong></p>
+          <p>Test your arguments against the Sovereign AI in a live adversarial environment regarding: <strong>{trialCase?.banner?.title || 'No Case Loaded'}</strong></p>
+          <button
+            onClick={() => setPhase('case_select')}
+            style={{ marginTop: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', padding: '6px 14px', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'var(--font-ui)', fontWeight: 600 }}
+          >
+            ← Switch Case
+          </button>
         </div>
 
         {/* If active strategy exists, show it first */}
@@ -143,7 +212,7 @@ export default function SimulatorPage() {
                 Strategy Attached — Review Before Trial
               </span>
             </div>
-            <StrategyPreviewCard strategy={activeAnalysis.activeStrategy} onLaunchTrial={handleStartTrial} />
+            <StrategyPreviewCard strategy={trialCase.activeStrategy} onLaunchTrial={handleStartTrial} />
           </div>
         ) : (
           /* No strategy: pick side directly */
@@ -217,10 +286,10 @@ export default function SimulatorPage() {
           <div className="verdict-analysis">
             <h3><CheckCircle size={17} className="text-safe" style={{ display: 'inline', marginRight: 8 }} />Strategic Suggestion For Real Trial</h3>
             <p className="mt-3">Based on the simulation, your strongest angle was leveraging the semantic inconsistencies in opposing counsel's definitions. However, the Judge penalized your lack of cited precedent. The best outcome going forward is to file an early motion for partial summary judgment to establish the underlying factual constraints before proceeding to discovery.</p>
-            {activeAnalysis?.activeStrategy && (
+            {trialCase?.activeStrategy && (
               <div style={{ marginTop: 20, padding: '14px 18px', background: 'rgba(207,178,134,0.07)', border: '1px solid rgba(207,178,134,0.25)', borderRadius: 10 }}>
                 <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--judion-gold-dark)' }}>Aligned with Strategy: </span>
-                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-main)' }}>{activeAnalysis.activeStrategy.title}</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-main)' }}>{trialCase.activeStrategy.title}</span>
               </div>
             )}
           </div>
@@ -229,7 +298,7 @@ export default function SimulatorPage() {
             <button className="btn-sm-outline" onClick={() => navigate('/strategies')}>
               View Strategies <ArrowRight size={14} style={{ display: 'inline' }} />
             </button>
-            <button className="btn-sm-dark" onClick={handleRestart}>Conduct Another Trial</button>
+            <button className="btn-sm-dark" onClick={handleRestart}>Run Another Trial</button>
           </div>
         </div>
       </div>
@@ -244,7 +313,7 @@ export default function SimulatorPage() {
         <div className="trial-hud">
           <span className="trial-badge">ACTIVE TRIAL</span>
           <h2 className="mt-4 text-2xl font-bold" style={{ color: 'white', fontFamily: 'var(--font-header)', fontSize: 18, lineHeight: 1.3 }}>
-            {activeAnalysis.banner.title}
+            {trialCase?.banner?.title}
           </h2>
 
           <div className="hud-side-info mt-6">
@@ -256,12 +325,12 @@ export default function SimulatorPage() {
           </div>
 
           {/* Strategy reminder */}
-          {activeAnalysis?.activeStrategy && (
+          {trialCase?.activeStrategy && (
             <div className="hud-strategy-chip mt-6">
               <Flame size={13} style={{ color: 'var(--judion-gold)', flexShrink: 0 }} />
               <div>
                 <span style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.7px', color: 'var(--judion-gold)', display: 'block', marginBottom: 2 }}>Active Strategy</span>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>{activeAnalysis.activeStrategy.title}</span>
+                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>{trialCase.activeStrategy.title}</span>
               </div>
             </div>
           )}
