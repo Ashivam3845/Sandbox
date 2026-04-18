@@ -7,19 +7,21 @@
 }
 
 .page-header {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   border-bottom: 1px solid var(--border-light);
-  padding-bottom: 24px;
+  padding-bottom: 22px;
 }
 
 .page-header h1 {
-  font-size: 28px;
-  margin-bottom: 6px;
+  font-family: var(--font-header);
+  font-size: 26px;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
 }
 
 .page-header p {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .page-grid {
@@ -77,43 +79,48 @@
 }
 
 .btn-sm-dark {
-  background: var(--judion-brown);
+  background: linear-gradient(135deg, var(--judion-brown), var(--judion-slate));
   color: var(--judion-gold);
   border: none;
-  padding: 8px 16px;
+  padding: 9px 18px;
   border-radius: 8px;
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(82, 61, 44, 0.2);
+  transition: var(--transition-smooth);
+  box-shadow: 0 3px 10px rgba(82, 61, 44, 0.22);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-sm-dark:hover {
-  background: var(--judion-slate);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(71, 89, 103, 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  filter: brightness(1.1);
 }
 
 .btn-sm-outline {
   background: transparent;
   color: var(--text-main);
-  border: 1px solid var(--border-light);
-  padding: 8px 16px;
+  border: 1.5px solid var(--border-mid);
+  padding: 9px 18px;
   border-radius: 8px;
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-sm-outline:hover {
   border-color: var(--judion-gold);
   color: var(--judion-brown);
-  background: var(--bg-panel);
+  background: rgba(207,178,134,0.05);
 }
 
 /* Analytics charts */
@@ -331,18 +338,18 @@
 }
 
 .upload-zone {
-  border: 2px dashed var(--judion-gold);
-  border-radius: 12px;
+  border: 2px dashed rgba(207,178,134,0.4);
+  border-radius: 14px;
   padding: 48px;
   text-align: center;
-  background: rgba(207, 178, 134, 0.05);
+  background: rgba(207, 178, 134, 0.04);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: var(--transition-smooth);
 }
 
 .upload-zone:hover {
   border-color: var(--judion-brown);
-  background: rgba(207, 178, 134, 0.1);
+  background: rgba(207, 178, 134, 0.08);
   transform: translateY(-2px);
 }
 
@@ -356,8 +363,38 @@
   color: var(--text-muted);
 }
 
+/* btn-premium-action (used in SavedStrategies) */
+.btn-premium-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--judion-brown);
+  border: 1.5px solid rgba(207,178,134,0.4);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-premium-action:hover {
+  background: var(--judion-brown);
+  color: var(--judion-gold);
+  border-color: var(--judion-brown);
+}
+
+/* card-header-flex */
+.card-header-flex {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.card-title { font-size: 15px; font-family: var(--font-header); font-weight: 700; letter-spacing: 0.2px; }
+
 @media print {
-  .Sidebar {
-    display: none !important;
-  }
+  .Sidebar { display: none !important; }
 }
