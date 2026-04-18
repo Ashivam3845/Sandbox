@@ -112,12 +112,15 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.Simulator-Setup .page-header h1 { color: white; }
-.Simulator-Setup .page-header p  { color: rgba(255, 255, 255, 0.7); }
+.Simulator-Setup .page-header h1 { color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,0.6); }
+.Simulator-Setup .page-header p  { color: rgba(255, 255, 255, 0.85); font-size: 14px; }
 
 .Simulator-Setup .setup-container {
   max-width: 800px;
   margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .Simulator-Setup .setup-title {
@@ -125,11 +128,21 @@
   margin-bottom: 32px;
   font-family: var(--font-header);
   letter-spacing: 0.5px;
+  color: #fff;
+  font-size: 22px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  padding: 16px 32px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: inline-block;
 }
 
 .side-cards {
   display: flex;
   gap: 24px;
+  width: 100%;
 }
 
 .side-card {
@@ -188,8 +201,8 @@
 
 .side-card-body p {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.65;
   min-height: 50px;
 }
 
@@ -309,7 +322,10 @@
   display: grid;
   grid-template-columns: 300px 1fr;
   height: 100vh;
-  background: linear-gradient(rgba(20, 20, 22, 0.42), rgba(20, 20, 22, 0.82)), url('/images/courtroom_bg.png') center/cover no-repeat;
+  /* Stronger overlay so content is readable */
+  background:
+    linear-gradient(rgba(8, 8, 10, 0.72), rgba(8, 8, 10, 0.88)),
+    url('/images/courtroom_bg.png') center/cover no-repeat;
   background-attachment: fixed;
   color: white;
 }
@@ -367,7 +383,9 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  background: transparent;
+  /* Frosted dark backdrop so messages are always readable */
+  background: rgba(8, 8, 10, 0.55);
+  backdrop-filter: blur(4px);
 }
 
 .court-msg-wrapper {
@@ -385,7 +403,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.65);
   margin-bottom: 5px;
   display: flex;
   align-items: center;
@@ -393,11 +411,11 @@
 }
 
 .court-msg {
-  padding: 13px 18px;
+  padding: 14px 20px;
   border-radius: 14px;
   font-size: 14px;
-  line-height: 1.6;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  line-height: 1.65;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.35);
 }
 
 .court-msg.user {
@@ -408,21 +426,24 @@
 }
 
 .court-msg.counsel {
-  background: rgba(255,255,255,0.93);
-  color: var(--text-main);
-  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.97);
+  color: #1a1009;
+  border: 1px solid rgba(0,0,0,0.1);
   border-bottom-left-radius: 4px;
+  font-weight: 500;
 }
 
 .court-msg.judge {
-  background: rgba(10,10,12,0.92);
+  background: rgba(6, 6, 8, 0.96);
   border: 1.5px solid var(--judion-gold);
-  color: white;
+  color: #fff;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
   font-family: var(--font-header);
-  font-size: 13px;
-  letter-spacing: 0.2px;
+  font-size: 14px;
+  letter-spacing: 0.25px;
+  line-height: 1.65;
+  box-shadow: 0 0 24px rgba(207,178,134,0.15);
 }
 
 .court-msg.typing {
